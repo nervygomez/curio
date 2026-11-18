@@ -47,6 +47,7 @@ npm.cmd run build
 npx.cmd cap sync android
 cd android
 .\gradlew.bat assembleDebug
+Copy-Item .\app\build\outputs\apk\debug\app-debug.apk .\app\build\outputs\apk\debug\curio.apk -Force
 ```
 
 `cap sync` copies the latest web build into the Android project. Run it again after changing the web app before building a new APK.
@@ -54,10 +55,10 @@ cd android
 The debug APK is created at:
 
 ```text
-android/app/build/outputs/apk/debug/app-debug.apk
+android/app/build/outputs/apk/debug/curio.apk
 ```
 
-This is a debug-signed APK for testing. For a store-ready release, open the `android` folder in Android Studio and use **Build > Generate Signed Bundle / APK** to create a signed release.
+This is a copy of Gradle's debug APK, named `curio.apk` for convenience. It is debug-signed for testing. For a store-ready release, open the `android` folder in Android Studio and use **Build > Generate Signed Bundle / APK** to create a signed release.
 
 ## Android project details
 
