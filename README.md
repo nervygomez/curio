@@ -1,59 +1,66 @@
 # Curio
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.20.
+Curio is a small Angular app for discovering curious ideas, psychological effects, and paradoxes. Press **Spin topic** to cycle through the collection and land on a random topic. Each topic is shown in English, with Spanish and Portuguese translations; the spin includes simple sound effects.
 
-## Development server
+The collection currently contains 100 topics and is maintained in [`src/app/data/topics.ts`](./src/app/data/topics.ts).
 
-To start a local development server, run:
+## Requirements
 
-```bash
-ng serve
-```
+- Node.js compatible with Angular 21 (Node.js 20.19+ or 22.12+)
+- npm
+- For Android builds: Android Studio with the Android SDK, and a compatible Java JDK
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Run locally
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Install dependencies and start the Angular development server:
 
 ```bash
-ng generate component component-name
+npm ci
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Open [http://localhost:4200](http://localhost:4200). The server reloads when application files change.
+
+## Build and test the web app
+
+Create a production build:
 
 ```bash
-ng generate --help
+npm run build
 ```
 
-## Building
+The web build is written to `dist/curio/browser`.
 
-To build the project run:
+Run unit tests:
 
 ```bash
-ng build
+npm test
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Build an Android APK
 
-## Running unit tests
+The Android app is packaged with Capacitor. On Windows, open PowerShell in the project root and run:
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+```powershell
+npm.cmd ci
+npm.cmd run build
+npx.cmd cap sync android
+cd android
+.\gradlew.bat assembleDebug
 ```
 
-## Running end-to-end tests
+`cap sync` copies the latest web build into the Android project. Run it again after changing the web app before building a new APK.
 
-For end-to-end (e2e) testing, run:
+The debug APK is created at:
 
-```bash
-ng e2e
+```text
+android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+This is a debug-signed APK for testing. For a store-ready release, open the `android` folder in Android Studio and use **Build > Generate Signed Bundle / APK** to create a signed release.
 
-## Additional Resources
+## Android project details
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Capacitor app ID: `com.nervy.curio`
+- Android project: `android/`
+- Gradle wrapper: `android/gradlew.bat` (Windows) or `android/gradlew` (macOS/Linux)
