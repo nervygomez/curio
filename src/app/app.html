@@ -1,26 +1,67 @@
 <div class="app">
-  <main class="card">
+  @if (!hasStarted) {
+    <main class="card instructions" aria-labelledby="instructions-title">
+      <p class="status">WELCOME TO CURIO</p>
+      <h1 id="instructions-title">How to play</h1>
+      <p class="instruction-intro">
+        Discover a curious idea, learn about it, and teach it back.
+      </p>
 
-    <p class="status">
-      {{ isDrawing ? 'DRAWING...' : 'YOUR TOPIC' }}
-    </p>
+      <ol class="steps">
+        <li>
+          <span class="step-number" aria-hidden="true">1</span>
+          <div>
+            <h2>Spin the wheel</h2>
+            <p>Get a random topic from Curio's collection.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-number" aria-hidden="true">2</span>
+          <div>
+            <h2>Research for about 15 minutes</h2>
+            <p>Use Google Scholar only to investigate your topic.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-number" aria-hidden="true">3</span>
+          <div>
+            <h2>Explain it in one minute</h2>
+            <p>Share the idea clearly and in your own words.</p>
+          </div>
+        </li>
+      </ol>
 
-    <h1>{{ currentTopic.title }}</h1>
+      <button
+        class="continue-button"
+        type="button"
+        (click)="continueToWheel()"
+      >
+        Continue to the wheel
+      </button>
+    </main>
+  } @else {
+    <main class="card game" aria-label="Topic roulette">
+      <p class="status">
+        {{ isDrawing ? 'DRAWING...' : 'YOUR TOPIC' }}
+      </p>
 
-    @if (!isDrawing) {
-      <div class="translations">
-        <div>{{ currentTopic.es }}</div>
-        <div>{{ currentTopic.pt }}</div>
-      </div>
-    }
+      <h1>{{ currentTopic.title }}</h1>
 
-    <button
-      type="button"
-      (click)="spinTopic()"
-      [disabled]="isDrawing"
-    >
-      {{ isDrawing ? 'Drawing...' : 'Spin topic' }}
-    </button>
+      @if (!isDrawing) {
+        <div class="translations">
+          <div>{{ currentTopic.es }}</div>
+          <div>{{ currentTopic.pt }}</div>
+        </div>
+      }
 
-  </main>
+      <button
+        class="spin-button"
+        type="button"
+        (click)="spinTopic()"
+        [disabled]="isDrawing"
+      >
+        {{ isDrawing ? 'Drawing...' : 'Spin topic' }}
+      </button>
+    </main>
+  }
 </div>

@@ -16,11 +16,17 @@ export class App {
 
   currentTopic: Topic = this.topics[0];
 
+  hasStarted = false;
+
   isDrawing = false;
 
   private audioContext?: AudioContext;
 
   constructor(private cdr: ChangeDetectorRef) {}
+
+  continueToWheel(): void {
+    this.hasStarted = true;
+  }
 
   spinTopic(): void {
     if (this.isDrawing) {

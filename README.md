@@ -1,6 +1,6 @@
 # Curio
 
-Curio is a small Angular app for discovering curious ideas, psychological effects, and paradoxes. Press **Spin topic** to cycle through the collection and land on a random topic. Each topic is shown in English, with Spanish and Portuguese translations; the spin includes simple sound effects.
+Curio is a small Angular app for discovering curious ideas, psychological effects, and paradoxes. Start by reading the instructions, then spin the wheel for a random topic. Research it for about 15 minutes using only Google Scholar, then explain it clearly in one minute. Topics are shown in English, with Spanish and Portuguese translations, and the spin includes simple sound effects.
 
 The collection currently contains 100 topics and is maintained in [`src/app/data/topics.ts`](./src/app/data/topics.ts).
 

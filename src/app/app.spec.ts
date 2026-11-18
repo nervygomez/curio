@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { TOPICS } from './data/topics';
 
@@ -31,6 +31,13 @@ class MockAudioContext {
   }
 }
 
+function openWheel(fixture: ComponentFixture<App>): void {
+  fixture.detectChanges();
+  const compiled = fixture.nativeElement as HTMLElement;
+  compiled.querySelector<HTMLButtonElement>('.continue-button')?.click();
+  fixture.detectChanges();
+}
+
 describe('App', () => {
   beforeEach(async () => {
     vi.stubGlobal('AudioContext', MockAudioContext);
@@ -46,9 +53,28 @@ describe('App', () => {
     vi.unstubAllGlobals();
   });
 
-  it('starts with the first topic and displays its translations', () => {
+  it('shows the instructions first and opens the wheel when continued', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const instructions = compiled.querySelector('.instructions');
+
+    expect(instructions?.textContent).toContain('15 minutes');
+    expect(instructions?.textContent).toContain('Google Scholar only');
+    expect(instructions?.textContent).toContain('one minute');
+    expect(compiled.querySelector('.spin-button')).toBeNull();
+
+    compiled.querySelector<HTMLButtonElement>('.continue-button')?.click();
+    fixture.detectChanges();
+
+    expect(compiled.querySelector('.instructions')).toBeNull();
+    expect(compiled.querySelector('.game')).not.toBeNull();
+  });
+
+  it('starts with the first topic and displays its translations', () => {
+    const fixture = TestBed.createComponent(App);
+    openWheel(fixture);
 
     const compiled = fixture.nativeElement as HTMLElement;
     const translations = compiled.querySelectorAll('.translations div');
@@ -64,10 +90,10 @@ describe('App', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.99);
 
     const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
+    openWheel(fixture);
 
     const compiled = fixture.nativeElement as HTMLElement;
-    compiled.querySelector('button')?.click();
+    compiled.querySelector<HTMLButtonElement>('.spin-button')?.click();
     fixture.detectChanges();
 
     expect(fixture.componentInstance.isDrawing).toBe(true);
@@ -94,6 +120,7 @@ describe('App', () => {
 
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
+    app.continueToWheel();
 
     app.spinTopic();
     const initialCalls = random.mock.calls.length;
@@ -115,6 +142,7 @@ describe('App', () => {
 
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
+    app.continueToWheel();
 
     app.spinTopic();
     const topicDuringDraw = app.currentTopic;
