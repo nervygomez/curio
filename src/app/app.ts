@@ -1,6 +1,10 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { TOPICS, Topic } from './data/topics';
 
+const SPIN_STEPS = 24;
+const MIN_TICK_DELAY_MS = 35;
+const MAX_TICK_DELAY_MS = 300;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
@@ -28,40 +32,30 @@ export class App {
 
     this.startAudio();
 
-    let elapsed = 0;
-    let delay = 30;
+    const finalIndex = Math.floor(Math.random() * this.topics.length);
+    let step = 0;
 
     const draw = () => {
-
-      const randomIndex = Math.floor(
-        Math.random() * this.topics.length
-      );
-
-      this.currentTopic = this.topics[randomIndex];
-
-      this.playTick();
-
-      elapsed += delay;
-
-      this.cdr.detectChanges();
-
-      if (elapsed < 2500) {
-
-        delay += 18;
-        setTimeout(draw, delay);
-
-      } else {
-
-        const finalIndex = Math.floor(
-          Math.random() * this.topics.length
-        );
-
+      if (step === SPIN_STEPS - 1) {
         this.currentTopic = this.topics[finalIndex];
-
         this.isDrawing = false;
         this.playWinnerSound();
         this.cdr.detectChanges();
+        return;
       }
+
+      const randomIndex = Math.floor(Math.random() * this.topics.length);
+      this.currentTopic = this.topics[randomIndex];
+      this.playTick();
+      this.cdr.detectChanges();
+
+      step += 1;
+      const progress = step / (SPIN_STEPS - 1);
+      const delay =
+        MIN_TICK_DELAY_MS +
+        (MAX_TICK_DELAY_MS - MIN_TICK_DELAY_MS) * progress ** 2;
+
+      setTimeout(draw, delay);
     };
 
     draw();

@@ -88,6 +88,27 @@ describe('App', () => {
     expect(compiled.querySelector('button')?.disabled).toBe(false);
   });
 
+  it('increases the delay between topic changes as the spin progresses', () => {
+    vi.useFakeTimers();
+    const random = vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+
+    app.spinTopic();
+    const initialCalls = random.mock.calls.length;
+
+    vi.advanceTimersByTime(500);
+    const earlyChanges = random.mock.calls.length - initialCalls;
+
+    vi.advanceTimersByTime(500);
+    const laterChanges = random.mock.calls.length - initialCalls - earlyChanges;
+
+    expect(earlyChanges).toBeGreaterThan(laterChanges);
+
+    vi.runAllTimers();
+  });
+
   it('ignores another spin while a draw is in progress', () => {
     vi.useFakeTimers();
     const random = vi.spyOn(Math, 'random').mockReturnValue(0);
@@ -97,9 +118,10 @@ describe('App', () => {
 
     app.spinTopic();
     const topicDuringDraw = app.currentTopic;
+    const randomCallsAfterStarting = random.mock.calls.length;
     app.spinTopic();
 
-    expect(random).toHaveBeenCalledTimes(1);
+    expect(random).toHaveBeenCalledTimes(randomCallsAfterStarting);
     expect(app.isDrawing).toBe(true);
     expect(app.currentTopic).toBe(topicDuringDraw);
 
